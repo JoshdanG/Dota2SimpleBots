@@ -1,29 +1,43 @@
 
-globalTest = 10;
+local tableRadiantHeroes =  { 
+				"npc_dota_hero_antimage",
+        "npc_dota_hero_axe",
+        "npc_dota_hero_bane",
+        "npc_dota_hero_shredder",
+				"npc_dota_hero_lina",
+			};
 
+local tableDireHeroes =  { 
+        "npc_dota_hero_drow_ranger",
+        "npc_dota_hero_earthshaker",
+        "npc_dota_hero_juggernaut",
+        "npc_dota_hero_mirana",
+        "npc_dota_hero_nevermore",
+			};
+
+local tableTeamHeroes = {};
+tableTeamHeroes [ TEAM_RADIANT ] = tableRadiantHeroes;
+tableTeamHeroes [ TEAM_DIRE ]    = tableDireHeroes;        
+        
 ----------------------------------------------------------------------------------------------------
 
 function Think()
 
+    local iTeam = GetTeam();
 
-	if ( GetTeam() == TEAM_RADIANT )
-	then
-		print( "selecting radiant" );
-		SelectHero( 0, "npc_dota_hero_antimage" );
-		SelectHero( 1, "npc_dota_hero_axe" );
-		SelectHero( 2, "npc_dota_hero_bane" );
-		SelectHero( 3, "npc_dota_hero_shredder" );
-		SelectHero( 4, "npc_dota_hero_lina" );
-	elseif ( GetTeam() == TEAM_DIRE )
-	then
-		print( "selecting dire" );
-		SelectHero( 5, "npc_dota_hero_drow_ranger" );
-		SelectHero( 6, "npc_dota_hero_earthshaker" );
-		SelectHero( 7, "npc_dota_hero_juggernaut" );
-		SelectHero( 8, "npc_dota_hero_mirana" );
-		SelectHero( 9, "npc_dota_hero_nevermore" );
-	end
-
+    local tableHeroes = tableTeamHeroes[ iTeam ];
+    local tablePlayers = GetTeamPlayers( iTeam );
+    
+    local i = 0;
+    
+    for i, iPlayer in ipairs( tablePlayers )
+    do
+      if ( IsPlayerBot( iPlayer ) )
+      then 
+        SelectHero( iPlayer , tableHeroes[ i ] );
+      end      
+    end
+    
 end
 
 ----------------------------------------------------------------------------------------------------
