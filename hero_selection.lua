@@ -1,41 +1,37 @@
 
 local tableRadiantHeroes =  { 
-				"npc_dota_hero_antimage",
-        "npc_dota_hero_axe",
-        "npc_dota_hero_bane",
-        "npc_dota_hero_shredder",
-				"npc_dota_hero_lina",
-			};
+        { "npc_dota_hero_antimage",            LANE_MID },
+        { "npc_dota_hero_axe",                 LANE_MID },
+        { "npc_dota_hero_bane",                LANE_BOT },
+        { "npc_dota_hero_shredder",            LANE_TOP },
+        { "npc_dota_hero_lina",                LANE_BOT },
+  };
 
 local tableDireHeroes =  { 
-        "npc_dota_hero_drow_ranger",
-        "npc_dota_hero_earthshaker",
-        "npc_dota_hero_juggernaut",
-        "npc_dota_hero_mirana",
-        "npc_dota_hero_nevermore",
-			};
+        { "npc_dota_hero_drow_ranger",         LANE_TOP },
+        { "npc_dota_hero_earthshaker",         LANE_MID },
+        { "npc_dota_hero_juggernaut",          LANE_BOT },
+        { "npc_dota_hero_mirana",              LANE_TOP },
+        { "npc_dota_hero_nevermore",           LANE_TOP },
+  };
 
 local tableTeamHeroes = {};
 tableTeamHeroes [ TEAM_RADIANT ] = tableRadiantHeroes;
-tableTeamHeroes [ TEAM_DIRE ]    = tableDireHeroes;        
-        
+tableTeamHeroes [ TEAM_DIRE ]    = tableDireHeroes;
+
 ----------------------------------------------------------------------------------------------------
 
 function Think()
 
-    local iTeam = GetTeam();
-
-    local tableHeroes = tableTeamHeroes[ iTeam ];
-    local tablePlayers = GetTeamPlayers( iTeam );
+    local tableHeroes = tableTeamHeroes[ GetTeam() ];
+    local tablePlayers = GetTeamPlayers( GetTeam() );
     
-    local i = 0;
-    
-    for i, iPlayer in ipairs( tablePlayers )
+    for i , iPlayer in ipairs( tablePlayers )
     do
       if ( IsPlayerBot( iPlayer ) )
       then 
-        SelectHero( iPlayer , tableHeroes[ i ] );
-      end      
+        SelectHero( iPlayer , tableHeroes[ i ][ 1 ] );
+      end
     end
     
 end
@@ -43,25 +39,13 @@ end
 ----------------------------------------------------------------------------------------------------
 function UpdateLaneAssignments()    
 
-    if ( GetTeam() == TEAM_RADIANT )
-    then
-        --print( "Radiant lane assignments" );
-        return {
-        [1] = LANE_MID,
-        [2] = LANE_MID,
-        [3] = LANE_BOT,
-        [4] = LANE_TOP,
-        [5] = LANE_BOT,
-        };
-    elseif ( GetTeam() == TEAM_DIRE )
-    then
-        --print( "Dire lane assignments" );
-        return {
-        [1] = LANE_TOP,
-        [2] = LANE_MID,
-        [3] = LANE_BOT,
-        [4] = LANE_TOP,
-        [5] = LANE_TOP,
-        };
+    local tableHeroes = tableTeamHeroes[ GetTeam() ];
+    local tableLaneAssignments = {};
+    
+    for i , tableHeroLane in ipairs( tableHeroes )
+    do
+      tableLaneAssignments[ i ] = tableHeroLane[ 2 ];
     end
+    
+    return tableLaneAssignments;    
 end
